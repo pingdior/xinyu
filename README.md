@@ -36,7 +36,7 @@
 
 1.  **克隆项目:**
     ```bash
-    git clone [你的仓库地址]
+    git clone [https://github.com/pingdior/xinyu.git]
     cd XinYu-App
     ```
 2.  **打开 Xcode 工程:**
@@ -45,8 +45,7 @@
 4.  **编译并运行:**  点击 "Play" 按钮 (或 Command + R) 编译并运行 App 到你的 iPad Pro 上。
 
 **项目结构**
-Use code with caution.
-Markdown
+```Markdown
 XinYu-App/
 ├── XinYu/ # Xcode 工程文件夹
 │ ├── Assets.xcassets/ # 图片资源
@@ -62,6 +61,7 @@ XinYu-App/
 ├── README.md # 项目 README 文件
 ├── LICENSE # 开源许可证 (MIT)
 └── ...
+```
 
 **未来计划 (V2.0 展望)**
 
@@ -80,7 +80,7 @@ XinYu-App/
 **联系方式**
 
 [woodgaya@gmail.com ]
-[你的Github 个人主页]
+[https://github.com/pingdior]
 
 ---
 **感谢您的关注和使用！**
