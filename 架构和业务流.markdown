@@ -1,0 +1,202 @@
+二、开发架构图
+graph LR
+    A[用户] --> B(iPad Pro 2018 - 心屿App)
+    B --> C{用户界面 (SwiftUI)}
+    C --> D[业务逻辑层 (Swift)]
+    D --> E[本地AI模型层 (Core ML / Swift)]
+    E --> F[情感分析模型]
+    E --> G[情绪知识库]
+    D --> H[本地数据存储 (Core Data / SQLite)]
+    H --> I[用户数据 (本地加密)]
+
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#ccf,stroke:#333,stroke-width:1px
+    style H fill:#ccf,stroke:#333,stroke-width:1px
+
+架构说明:
+
+用户界面层 (UI Layer): 使用 SwiftUI 构建，负责用户交互和界面展示。
+
+业务逻辑层 (Business Logic Layer): 使用 Swift 编写，处理用户输入，调用 AI 模型进行评估，生成评估报告，管理本地数据存储等核心业务逻辑。
+
+本地AI模型层 (AI Model Layer):
+
+情感分析模型: 本地部署的轻量级 NLP 和情感分析模型 (Core ML 或 Swift 实现)。
+
+情绪知识库: 本地存储的情绪健康知识库，用于提供科普信息和建议。
+
+本地数据存储层 (Data Storage Layer):
+
+1. 数据分级管理:
+- 敏感数据: 用户输入文本/语音、个人评估报告等，仅本地存储。
+- 匿名数据: 情绪评分、压力水平等统计数据，可选择性上传。
+- 系统数据: App设置、本地模型参数等基础数据。
+
+2. 用户授权机制:
+- 默认Local模式: 所有数据完全本地存储。
+- 可选Hybrid模式: 用户授权后可共享匿名数据。
+- 灵活切换: 用户可随时修改数据存储偏好。
+
+3. 技术实现方案:
+- 本地差分隐私: 对共享数据进行脱敏处理。
+- 端侧联邦学习: 预留未来优化模型的可能。
+- 安全多方计算: 为医疗机构合作预留接口。
+
+4. 数据安全措施:
+- 本地加密: 使用iOS原生数据保护机制。
+- 安全传输: 采用HTTPS加密传输匿名数据。
+- 定期清理: 支持用户自主选择数据清理周期。
+
+技术选型考虑:
+
+开发语言: Swift (统一前后端，便于本地部署和性能优化)
+
+UI框架: SwiftUI (现代、高效、原生 iOS/iPadOS UI 框架)
+
+AI模型部署: Core ML (苹果官方的本地机器学习框架，性能好，易于集成) 或 Swift (如果模型足够简单，可直接用 Swift 实现规则或简单算法)。
+
+本地数据库: Core Data (苹果官方的对象关系映射框架，易用性好) 或 SQLite (轻量级关系型数据库，更灵活)。
+
+三、核心业务流程图
+graph LR
+    A[App启动] --> B{用户选择输入方式 (语音/文本)}
+    B -- 语音输入 --> C[录音]
+    B -- 文本输入 --> D[文本输入框]
+    C --> E[语音转文本 (本地或系统API)]
+    E --> F[AI模型情绪评估]
+    D --> F
+    F --> G[生成评估报告]
+    G --> H[展示评估报告 (文字+图表)]
+    H --> I{用户查看报告/获取建议}
+    I --> J[结束/返回主界面]
+
+    style F fill:#aaf,stroke:#333,stroke-width:1px
+    style G fill:#aaf,stroke:#333,stroke-width:1px
+
+流程说明:
+
+App启动: 用户打开心屿App。
+
+选择输入方式: 用户选择语音输入或文本输入。
+
+语音/文本输入: 用户进行语音录制或文本输入，描述当前情绪状态。
+
+语音转文本 (可选): 如果是语音输入，则进行本地语音转文本处理 (可考虑使用iPadOS系统自带的语音识别API，或本地部署轻量级语音识别模型)。
+
+AI模型情绪评估: 将文本输入 (或语音转文本结果) 送入本地 AI 模型进行情绪评估。
+
+生成评估报告: AI 模型输出评估结果，业务逻辑层根据结果生成个性化评估报告。
+
+展示评估报告: App 将评估报告以文字和图表形式展示给用户。
+
+查看报告/获取建议: 用户查看评估报告，并获取初步的情绪调节建议。
+
+结束/返回主界面: 用户完成一次评估流程，可选择返回主界面进行下一次评估或其他操作。
+
+四、核心数据流程图
+graph LR
+    A[用户输入 (语音/文本)] --> B(输入数据预处理)
+    B --> C(本地AI模型)
+    C --> D[评估结果 (情绪维度, 风险等级)]
+    D --> E(报告生成模块)
+    E --> F[评估报告数据]
+    F --> G1{数据分级处理}
+    G1 --> G2[敏感数据]
+    G1 --> G3[匿名数据]
+    G2 --> H1[本地加密存储]
+    G3 --> H2{用户授权?}
+    H2 -- 是 --> H3[差分隐私处理]
+    H3 --> H4[可选上传]
+    H2 -- 否 --> H1
+    H1 --> I[用户本地设备]
+    F --> J[报告展示 (UI)]
+    J --> K[用户查看报告]
+
+    style C fill:#aaf,stroke:#333,stroke-width:1px
+    style G1 fill:#aaf,stroke:#333,stroke-width:1px
+
+流程说明:
+
+用户输入: 用户通过语音或文本输入情绪描述。
+
+输入数据预处理: 对用户输入数据进行预处理，例如文本清洗、分词等 (根据具体 AI 模型需求)。
+
+本地 AI 模型: 预处理后的数据输入本地 AI 模型进行情绪评估。
+
+评估结果: AI 模型输出评估结果，包括情绪维度、风险等级等。
+
+报告生成模块: 根据评估结果，生成结构化的评估报告数据。
+
+数据分级处理:
+- 敏感数据: 直接进入本地加密存储。
+- 匿名数据: 根据用户授权决定处理方式。
+
+数据存储流程:
+- 本地加密存储: 所有敏感数据和未授权的匿名数据。
+- 差分隐私处理: 对授权上传的匿名数据进行脱敏。
+- 可选上传: 经过处理的匿名数据可选择性上传。
+
+五、数据实体结构 (V1.0 MVP)
+erDiagram
+    User {
+        UserID VARCHAR(255) PK
+        CreationTimestamp DATETIME
+        DataSharingPreference VARCHAR(50)
+    }
+    Assessment {
+        AssessmentID VARCHAR(255) PK
+        UserID VARCHAR(255) FK
+        InputText TEXT
+        InputType VARCHAR(50)
+        AssessmentTimestamp DATETIME
+        PositiveScore FLOAT
+        NegativeScore FLOAT
+        StressLevel FLOAT
+        AnxietyLevel FLOAT
+        RiskLevel VARCHAR(50)
+        ReportText TEXT
+        IsAnonymousShared BOOLEAN
+    }
+    User ||--o{ Assessment : "has"
+
+数据实体说明:
+
+User (用户):
+
+UserID (VARCHAR(255), PK): 用户ID (可以是一个随机生成的UUID，用于本地区分用户，不收集真实身份信息)。
+
+CreationTimestamp (DATETIME): 用户首次使用App的时间戳。
+
+DataSharingPreference (VARCHAR(50)): 用户数据共享偏好设置 ("local_only" 或 "allow_anonymous")。
+
+Assessment (评估记录):
+
+AssessmentID (VARCHAR(255), PK): 评估记录ID (UUID)。
+
+UserID (VARCHAR(255), FK): 关联的用户ID。
+
+InputText (TEXT): 用户输入的文本内容 (或语音转文本结果)。
+
+InputType (VARCHAR(50)): 输入类型 ("voice" 或 "text")。
+
+AssessmentTimestamp (DATETIME): 评估发生的时间戳。
+
+PositiveScore (FLOAT): 积极情绪得分 (0-1)。
+
+NegativeScore (FLOAT): 消极情绪得分 (0-1)。
+
+StressLevel (FLOAT): 压力水平得分 (0-1)。
+
+AnxietyLevel (FLOAT): 焦虑水平得分 (0-1)。
+
+RiskLevel (VARCHAR(50)): 情绪风险等级 ("low", "medium", "high")。
+
+ReportText (TEXT): 评估报告的文字内容 (可以包含建议和免责声明)。
+
+IsAnonymousShared (BOOLEAN): 是否已匿名共享此记录。
+
+数据关系:
+
+User ||--o{ Assessment : "has": 一个用户可以拥有多条评估记录 (一对多关系)。
+
+数据存储方式: 使用 Core Data 或 SQLite 进行本地存储，并对敏感数据字段 (如 InputText, ReportText) 进行加密处理。
