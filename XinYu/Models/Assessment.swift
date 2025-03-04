@@ -14,14 +14,14 @@ struct Assessment: Identifiable, Codable {
     let reportText: String
     
     enum InputType: String, Codable {
-        case text
-        case voice
+        case text = "文本"
+        case voice = "语音"
     }
     
     enum RiskLevel: String, Codable {
-        case low
-        case medium
-        case high
+        case low = "低风险"
+        case medium = "中等风险"
+        case high = "高风险"
     }
     
     init(

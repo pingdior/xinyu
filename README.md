@@ -1,82 +1,95 @@
+# XinYu 心屿
 
-# 心语 (XinYu) - 情绪健康智能助手 (V1.0 MVP)
+XinYu(心屿)是一款基于人工智能的情感分析应用，能够通过文本和语音识别用户的情感状态，提供情绪评估和建议。
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+## 功能特点
 
-**项目简介**
+- 支持文本输入情感分析
+- 支持语音输入情感分析
+- 多维度情感评估（喜悦、悲伤、愤怒、恐惧、焦虑、平静）
+- 情感分析可视化展示
+- 本地优先的数据处理，保护用户隐私
 
-心屿 (XinYu) 是一款注重隐私保护、本地部署的情绪健康智能评估与管理 App，旨在为用户提供快速、便捷、私密的情绪状态洞察和初步建议。V1.0 MVP 版本专注于核心的情绪状态快速评估功能，所有数据本地存储，极致保护用户隐私。
+## 技术架构
 
-**核心特性 (V1.0 MVP)**
+### 情感分析系统
 
-*   **情绪状态快速评估:**  支持语音和文本两种输入方式，用户可快速进行情绪自测。
-*   **本地AI模型驱动:**  内置轻量级 NLP 和情感分析模型，无需联网即可进行评估。
-*   **个性化评估报告:**  生成简洁明了的评估报告，包含情绪维度分析和初步建议。
-*   **极致隐私保护:**  
-    - 数据分级管理：敏感数据完全本地存储，匿名数据可选择性共享
-    - 本地加密存储：使用iOS原生数据保护机制
-    - 差分隐私：对共享数据进行脱敏处理
-    - 用户完全控制：可随时修改数据共享偏好，支持定期数据清理
-*   **本地部署:**  App 可在 iPad Pro 等设备上本地部署运行，无需网络连接。
-*   **简洁易用:**  界面简洁直观，操作流程简单，用户快速上手。
+XinYu采用多层次的情感分析系统，结合规则引擎和机器学习模型：
 
-**技术栈**
+#### 1. 数据输入层
+- 文本直接输入
+- 语音通过Speech框架转换为文本
 
-*   **开发语言:** Swift
-*   **UI框架:** SwiftUI
-*   **本地AI模型:** Core ML (或 Swift 实现的轻量级模型)
-*   **本地数据存储:** Core Data 或 SQLite
-*   **数据安全:** 
-    - iOS原生数据保护
-    - 差分隐私技术
-    - HTTPS加密传输 (匿名数据)
-    - 端侧联邦学习 (预留)
+#### 2. 情感分析核心层
+- **规则引擎**：基于关键词匹配的轻量级分析器
+- **机器学习模型**：基于CoreML的情感分类器
+- **混合增强**：结合规则引擎和ML模型优势，提高分析准确性
 
-**开发环境**
+#### 3. 结果处理层
+- 情感多维度评分
+- 积极/消极指数计算
+- 情感可视化展示
 
-*   macOS (Apple M2 或更高处理器)
-*   Xcode 最新版本
+### 模型实现
 
-**本地部署设备**
+XinYu的情感分析采用三种核心模型：
 
-*   iPad Pro 2018 (或更高版本)，iPadOS 12 或更高版本
+1. **NativeEmotionClassifier**：规则引擎，基于中文情感关键词匹配
+2. **SimpleEmotionMLClassifier**：轻量级CoreML模型，适用于基础情感分类
+3. **CreateMLEmotionClassifier**：高级情感分析模型，使用CreateML训练
 
-**快速开始 (开发)**
+系统设计具有故障弹性，当ML模型不可用时自动回退到规则引擎。
 
-1.  **克隆项目:**
-    ```bash
-    git clone [https://github.com/pingdior/xinyu.git]
-    cd XinYu-App
-    ```
-2.  **打开 Xcode 工程:**
-    打开 `XinYu.xcodeproj` 或 `XinYu.xcworkspace` 文件。
-3.  **选择运行设备:**  在 Xcode 中选择你的 iPad Pro 2018 设备作为运行目标。
-4.  **编译并运行:**  点击 "Play" 按钮 (或 Command + R) 编译并运行 App 到你的 iPad Pro 上。
+## 安装与使用
 
-**项目结构**
+### 系统要求
+- iOS 14.0+
+- Xcode 12.0+
+- Swift 5.3+
 
+### 安装步骤
+1. 克隆项目到本地
+   ```
+   git clone https://github.com/yourusername/XinYu.git
+   ```
+2. 打开XinYu.xcodeproj
+3. 选择目标设备（真机或模拟器）
+4. 点击运行按钮或按Cmd+R
 
+### 使用方法
+1. 在输入框中输入文本或点击录音按钮进行语音输入
+2. 点击"分析情感"按钮
+3. 查看分析结果和情感图表
 
-```Markdown
+## 开发者指南
 
-XinYu-App/
-├── XinYu/ # Xcode 工程文件夹
-│ ├── Assets.xcassets/ # 图片资源
-│ ├── ContentView.swift # 主界面
-│ ├── ... # 其他 SwiftUI 视图文件
-│ ├── Models/ # 数据模型 (User, Assessment)
-│ ├── ViewModels/ # 视图模型
-│ ├── AI/ # 本地 AI 模型相关代码
-│ ├── Data/ # 本地数据存储相关代码
-│ ├── Utils/ # 工具类
-│ ├── XinYuApp.swift # App 入口
-│ └── ...
-├── README.md # 项目 README 文件
-├── LICENSE # 开源许可证 (MIT)
-└── ...
+### 添加新的情感关键词
+在`NativeEmotionClassifier.swift`中添加新的关键词：
+
+```swift
+private let joyKeywords = ["开心", "高兴", ... 添加新词]
 ```
 
-**未来计划 (V2.0 展望)**
+
+### 训练新的ML模型
+使用`create_emotion_model.py`生成数据集，然后使用CreateML应用训练新模型。
+
+### 调整混合策略
+在`SimpleEmotionMLClassifier.swift`中修改ML和规则引擎的权重：
+
+```swift
+// 默认是70% ML, 30% 规则
+scores.joyScore = scores.joyScore 0.7 + ruleBasedScores.joyScore 0.3
+```
+
+## 项目结构
+- **Models/**: 数据模型和ML模型
+- **Views/**: SwiftUI视图
+- **ViewModels/**: 视图模型
+- **Managers/**: 管理类（语音识别、CoreData等）
+- **Services/**: 网络服务和API处理
+
+## **未来计划 (V2.0 展望)**
 
 *   **动态情绪追踪功能**
 *   **初步生理指标融合 (iPad Pro 摄像头)**

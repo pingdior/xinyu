@@ -1,3 +1,10 @@
+//
+//  XinYuApp.swift
+//  XinYu
+//
+//  Created by chenping on 3/3/2025.
+//
+
 import SwiftUI
 
 @main

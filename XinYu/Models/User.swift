@@ -1,26 +1,12 @@
 import Foundation
 
-struct User: Identifiable, Codable {
-    enum DataStoragePreference: String, Codable {
-        case server // 默认服务器存储
-        case hybrid // 数据分级存储
-        case local  // 完全本地存储
+struct User {
+    enum DataStoragePreference {
+        case server  // 所有数据存储在服务器
+        case hybrid  // 匿名数据存储在服务器，敏感数据存储在本地
+        case local   // 所有数据仅存储在本地
     }
     
     let id: UUID
-    let username: String
-    let email: String
-    var dataStoragePreference: DataStoragePreference
-    
-    init(
-        id: UUID = UUID(),
-        username: String,
-        email: String,
-        dataStoragePreference: DataStoragePreference = .server
-    ) {
-        self.id = id
-        self.username = username
-        self.email = email
-        self.dataStoragePreference = dataStoragePreference
-    }
+    let storagePreference: DataStoragePreference
 }
